@@ -209,7 +209,7 @@ STRING(SUBSTRING ${_GIT_HEAD_COMMIT} 0  7 _GIT_HEAD_COMMIT_ABBREV )
 
 if (BSDBASED)
 #default gcc doesn't like using -Wuninitialized without -O on FreeBSD
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -ggdb")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -ggdb -lacl")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-omit-frame-pointer")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-optimize-sibling-calls")
 endif(BSDBASED)
@@ -228,7 +228,7 @@ endif(DARWIN)
 
 if (LINUX)
     set(PLATFORM "LINUX")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 -lacl")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-strict-aliasing")
     set(OS_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include/os/linux")
 endif(LINUX)
@@ -420,7 +420,7 @@ option(USE_RQUOTA "enable RQUOTA support" ON)
 # AF_VSOCK host support (NFS)
 option(USE_VSOCK "enable AF_VSOCK listener" OFF)
 if(USE_VSOCK)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRPC_VSOCK")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DRPC_VSOCK -lacl")
 endif(USE_VSOCK)
 
 # This option will trigger "long distro name" aka name that contains git information
@@ -462,11 +462,11 @@ IF(BUILD_CONFIG)
 ENDIF()
 
 IF(DEBUG_SYMS)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -lacl")
 ENDIF(DEBUG_SYMS)
 
 IF(COVERAGE)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --coverage -lacl")
 ENDIF(COVERAGE)
 
 # Set what's needed is GCC is enforced
@@ -569,7 +569,7 @@ if (USE_GSS)
   check_include_files(gssapi.h HAVE_GSSAPI_H)
   if (NOT HAVE_GSSAPI_H)
     # Debian/Ubuntu 12 magic
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I/usr/include/mit-krb5/")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I/usr/include/mit-krb5/ -lacl")
     check_include_files(gssapi.h HAVE_GSSAPI_H)
   endif(NOT HAVE_GSSAPI_H)
 
